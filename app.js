@@ -169,7 +169,10 @@ async function handleFiles(fileList) {
   log('> LOADING FILES...');
 
   for (const file of fileList) {
-    if (file.type.startsWith('image/')) {
+    if (file.type === 'image/gif') {
+      const gifFrames = await extractGifFrames(file);
+      frames.push(...gifFrames);
+    } else if (file.type.startsWith('image/')) {
       const imgData = await loadImageFile(file);
       if (imgData) frames.push(imgData);
     } else if (file.type.startsWith('video/')) {
@@ -205,6 +208,47 @@ function loadImageFile(file) {
     };
     img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
     img.src = url;
+  });
+}
+
+function extractGifFrames(file) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const arrayBuffer = e.target.result;
+        const GifReaderClass = window.GifReader || (window.omggif && window.omggif.GifReader);
+        if (!GifReaderClass) {
+          throw new Error('GifReader library not loaded');
+        }
+        const gifReader = new GifReaderClass(new Uint8Array(arrayBuffer));
+        const width = gifReader.width;
+        const height = gifReader.height;
+        const numFrames = gifReader.numFrames();
+        const collected = [];
+        
+        for (let i = 0; i < numFrames; i++) {
+          const pixels = new Uint8Array(width * height * 4);
+          gifReader.decodeAndBlitFrameRGBA(i, pixels);
+          
+          const imageData = new ImageData(new Uint8ClampedArray(pixels.buffer), width, height);
+          collected.push({
+            imageData: imageData,
+            width: width,
+            height: height
+          });
+        }
+        resolve(collected);
+      } catch (err) {
+        log('> ERROR DECODING GIF: ' + err.message);
+        resolve([]);
+      }
+    };
+    reader.onerror = () => {
+      log('> ERROR READING GIF FILE');
+      resolve([]);
+    };
+    reader.readAsArrayBuffer(file);
   });
 }
 
