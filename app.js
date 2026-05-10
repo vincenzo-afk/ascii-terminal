@@ -283,12 +283,27 @@ function pixelToAscii(frameObj) {
   for (let row = 0; row < rows; row++) {
     const rowData = [];
     for (let col = 0; col < cols; col++) {
-      const px = Math.floor(col * cellW);
-      const py = Math.floor(row * cellH);
-      const idx = (py * width + px) * 4;
-      const r = data[idx];
-      const g = data[idx + 1];
-      const b = data[idx + 2];
+      let sumR = 0, sumG = 0, sumB = 0;
+      let count = 0;
+      const startX = Math.floor(col * cellW);
+      const startY = Math.floor(row * cellH);
+      const endX = Math.floor((col + 1) * cellW);
+      const endY = Math.floor((row + 1) * cellH);
+
+      for (let y = startY; y < endY; y++) {
+        for (let x = startX; x < endX; x++) {
+          const idx = (y * width + x) * 4;
+          sumR += data[idx];
+          sumG += data[idx + 1];
+          sumB += data[idx + 2];
+          count++;
+        }
+      }
+
+      const r = count > 0 ? sumR / count : 0;
+      const g = count > 0 ? sumG / count : 0;
+      const b = count > 0 ? sumB / count : 0;
+
       let brightness = 0.299 * r + 0.587 * g + 0.114 * b;
       if (inv) brightness = 255 - brightness;
       const charIdx = Math.floor((brightness / 255) * (charset.length - 1));
