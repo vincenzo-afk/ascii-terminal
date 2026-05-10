@@ -68,6 +68,7 @@ const $frameCounter = document.getElementById('frame-counter');
 const $btnCopy   = document.getElementById('btn-copy');
 const $btnPng    = document.getElementById('btn-png');
 const $btnHtml   = document.getElementById('btn-html');
+const $btnTxt    = document.getElementById('btn-txt');
 const $btnGif    = document.getElementById('btn-gif');
 const $btnShare  = document.getElementById('btn-share');
 const $btnNewFile = document.getElementById('btn-newfile');
@@ -757,6 +758,19 @@ $btnHtml.addEventListener('click', () => {
   link.click();
   setTimeout(() => URL.revokeObjectURL(link.href), 1000);
   log('> HTML EXPORTED: ascii-art.html');
+});
+
+// Download TXT
+$btnTxt.addEventListener('click', () => {
+  const text = $asciiPre.innerText;
+  const blob = new Blob([text], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.download = 'ascii-art.txt';
+  link.href = url;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  log('> TEXT FILE DOWNLOADED: ascii-art.txt');
 });
 
 // Export GIF
