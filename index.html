@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASCII CINEMA v1.0</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div id="terminal">
+
+    <div id="topbar">
+      <span id="title-text">&#9646; ASCII CINEMA &#9646;</span>
+      <div id="topbar-right">
+        <select id="color-mode-select">
+          <option value="green">&#9632; GREEN</option>
+          <option value="amber">&#9632; AMBER</option>
+          <option value="white">&#9632; WHITE</option>
+          <option value="color">&#9632; COLOR</option>
+        </select>
+        <button id="config-toggle-btn">&#9881; CONFIG</button>
+      </div>
+    </div>
+
+    <div id="live-badge" class="hidden">&#9679; LIVE</div>
+
+    <div id="boot-text-container">
+      <div id="boot-text"></div>
+      <span id="cursor" class="blink">&#9646;</span>
+    </div>
+
+    <div id="drop-zone" class="hidden">
+      <div id="drop-zone-inner">
+        <div id="drop-icon">&#9707;</div>
+        <div id="drop-label">DROP IMAGE OR VIDEO HERE</div>
+        <div id="drop-sub">or click to browse &mdash; supports image/* and video/*</div>
+        <div id="drop-buttons">
+          <button id="browse-btn">&#9654; OPEN FILE</button>
+          <button id="cam-btn">&#9679; LIVE CAM</button>
+        </div>
+        <input type="file" id="file-input" accept="image/*,video/*" multiple hidden />
+      </div>
+    </div>
+
+    <div id="ascii-output" class="hidden">
+      <pre id="ascii-pre"></pre>
+    </div>
+
+    <div id="log-line" class="hidden"></div>
+
+    <div id="controls" class="hidden">
+      <div id="controls-left">
+        <button id="btn-prev">&#9646;&#9664; PREV</button>
+        <button id="btn-play">&#9654; PLAY</button>
+        <button id="btn-pause" class="hidden">&#9646;&#9646; PAUSE</button>
+        <button id="btn-next">NEXT &#9654;&#9646;</button>
+        <button id="btn-loop" class="toggle-btn">&#8635; LOOP</button>
+      </div>
+      <div id="controls-right">
+        <label>FPS <input type="range" id="fps-slider" min="1" max="30" value="10" /></label>
+        <span id="fps-display">10</span>
+        <span id="frame-counter">FRAME 01 / 01</span>
+      </div>
+    </div>
+
+    <div id="toolbar" class="hidden">
+      <button id="btn-copy">&#128203; COPY TEXT</button>
+      <button id="btn-png">&#128444; SAVE PNG</button>
+      <button id="btn-html">&#128196; EXPORT HTML</button>
+      <button id="btn-gif" class="hidden">&#127902; EXPORT GIF</button>
+      <button id="btn-share">&#128279; SHARE LINK</button>
+      <button id="btn-newfile">&#8635; NEW FILE</button>
+    </div>
+
+    <div id="gif-progress" class="hidden">
+      <div id="gif-progress-label">ENCODING GIF... 0%</div>
+      <div id="gif-progress-bar-wrap"><div id="gif-progress-bar"></div></div>
+    </div>
+
+  </div><!-- /#terminal -->
+
+  <div id="config-panel">
+    <div id="config-header">&#9881; CONFIGURATION</div>
+
+    <div class="config-section">
+      <div class="config-section-title">CHARACTER SET</div>
+      <div class="radio-group">
+        <label><input type="radio" name="charset" value="classic" checked /> Classic</label>
+        <label><input type="radio" name="charset" value="dense" /> Dense</label>
+        <label><input type="radio" name="charset" value="braille" /> Braille</label>
+        <label><input type="radio" name="charset" value="custom" /> Custom</label>
+      </div>
+      <input type="text" id="custom-charset-input" value=" .:-=+*#%@" placeholder="Type custom charset..." />
+    </div>
+
+    <div class="config-section">
+      <div class="config-section-title">COLOR MODE</div>
+      <div class="radio-group">
+        <label><input type="radio" name="colormode" value="green" checked /> Green Terminal</label>
+        <label><input type="radio" name="colormode" value="amber" /> Amber</label>
+        <label><input type="radio" name="colormode" value="white" /> White</label>
+        <label><input type="radio" name="colormode" value="color" /> Full Color</label>
+        <label><input type="radio" name="colormode" value="inverted" /> Inverted</label>
+      </div>
+    </div>
+
+    <div class="config-section">
+      <div class="config-section-title">FONT SIZE</div>
+      <label>Size <input type="range" id="font-size-slider" min="6" max="16" value="8" /></label>
+      <span id="font-size-display">8px</span>
+    </div>
+
+    <div class="config-section">
+      <div class="config-section-title">BACKGROUND</div>
+      <div class="radio-group">
+        <label><input type="radio" name="bgmode" value="black" checked /> Pure Black</label>
+        <label><input type="radio" name="bgmode" value="noise" /> Static Noise</label>
+      </div>
+    </div>
+
+    <div class="config-section">
+      <div class="config-section-title">RESOLUTION (COLUMNS)</div>
+      <div class="radio-group">
+        <label><input type="radio" name="resolution" value="40" /> 40</label>
+        <label><input type="radio" name="resolution" value="80" checked /> 80</label>
+        <label><input type="radio" name="resolution" value="120" /> 120</label>
+        <label><input type="radio" name="resolution" value="160" /> 160</label>
+      </div>
+    </div>
+
+    <div class="config-section">
+      <button id="config-close-btn">&#10006; CLOSE</button>
+    </div>
+  </div>
+
+  <canvas id="offscreen" hidden></canvas>
+  <canvas id="matrix-canvas" id="matrix-canvas"></canvas>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

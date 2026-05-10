@@ -1,0 +1,580 @@
+/* ==========================================
+   ASCII CINEMA — style.css
+   ========================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --green:   #00ff41;
+  --amber:   #ffb000;
+  --white:   #ffffff;
+  --bg:      #0a0a0a;
+  --panel-bg:#111111;
+  --border:  #00ff41;
+  --glow:    rgba(0, 255, 65, 0.18);
+  --fg:      #00ff41;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  overflow: hidden;
+  font-family: "Courier New", Courier, monospace;
+  color: var(--fg);
+}
+
+/* ==========================================
+   MATRIX CANVAS (easter egg overlay)
+   ========================================== */
+#matrix-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 9000;
+  pointer-events: none;
+  display: none;
+}
+
+/* ==========================================
+   TERMINAL WRAPPER
+   ========================================== */
+#terminal {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: inset 0 0 60px var(--glow), 0 0 40px var(--glow);
+}
+
+/* CRT scanline overlay */
+#terminal::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.05) 2px,
+    rgba(0, 0, 0, 0.05) 4px
+  );
+  pointer-events: none;
+  z-index: 998;
+}
+
+/* Vignette */
+#terminal::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.55) 100%);
+  pointer-events: none;
+  z-index: 997;
+}
+
+/* ==========================================
+   TOP BAR
+   ========================================== */
+#topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 14px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0,0,0,0.6);
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+#title-text {
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-shadow: 0 0 8px var(--fg);
+  font-weight: bold;
+}
+
+#topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#color-mode-select {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--fg);
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  padding: 3px 6px;
+  cursor: pointer;
+  outline: none;
+}
+#color-mode-select option {
+  background: #111;
+  color: var(--fg);
+}
+
+/* ==========================================
+   LIVE BADGE
+   ========================================== */
+#live-badge {
+  position: absolute;
+  top: 38px;
+  left: 14px;
+  font-size: 11px;
+  color: #ff2020;
+  animation: blink-anim 1s step-end infinite;
+  z-index: 200;
+  letter-spacing: 2px;
+}
+
+/* ==========================================
+   BOOT TEXT
+   ========================================== */
+#boot-text-container {
+  padding: 20px 20px 10px;
+  flex-shrink: 0;
+  min-height: 60px;
+  line-height: 1.6;
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-shadow: 0 0 6px var(--fg);
+}
+
+#boot-text {
+  display: inline;
+  white-space: pre-wrap;
+}
+
+#cursor {
+  display: inline-block;
+  color: var(--fg);
+  margin-left: 2px;
+  font-size: 14px;
+}
+
+.blink {
+  animation: blink-anim 0.8s step-end infinite;
+}
+
+@keyframes blink-anim {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ==========================================
+   LOG LINE
+   ========================================== */
+#log-line {
+  font-size: 11px;
+  padding: 2px 20px;
+  color: #7fff7f;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+  text-shadow: 0 0 4px #00ff41;
+  min-height: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==========================================
+   DROP ZONE
+   ========================================== */
+#drop-zone {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 14px 20px;
+  border: 1px dashed var(--border);
+  border-radius: 2px;
+  position: relative;
+  transition: background 0.2s;
+  overflow: hidden;
+}
+
+#drop-zone.drag-over {
+  background: rgba(0, 255, 65, 0.07);
+  border-color: var(--fg);
+  box-shadow: 0 0 20px var(--glow);
+}
+
+#drop-zone-inner {
+  text-align: center;
+  pointer-events: none;
+}
+
+#drop-icon {
+  font-size: 48px;
+  margin-bottom: 10px;
+  opacity: 0.5;
+  animation: float-anim 3s ease-in-out infinite;
+}
+
+@keyframes float-anim {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+#drop-label {
+  font-size: 16px;
+  letter-spacing: 3px;
+  margin-bottom: 6px;
+  text-shadow: 0 0 8px var(--fg);
+}
+
+#drop-sub {
+  font-size: 11px;
+  opacity: 0.5;
+  margin-bottom: 18px;
+  letter-spacing: 1px;
+}
+
+#drop-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  pointer-events: all;
+}
+
+/* ==========================================
+   ASCII OUTPUT
+   ========================================== */
+#ascii-output {
+  flex: 1;
+  overflow: auto;
+  padding: 4px 10px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  touch-action: pinch-zoom;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+#ascii-output::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+#ascii-output::-webkit-scrollbar-track { background: transparent; }
+#ascii-output::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 0;
+}
+
+#ascii-pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 8px;
+  line-height: 1.0;
+  letter-spacing: 0px;
+  white-space: pre;
+  margin: 0;
+  overflow: visible;
+  text-shadow: 0 0 3px var(--fg);
+  user-select: text;
+}
+
+/* ==========================================
+   CONTROLS
+   ========================================== */
+#controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 14px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  background: rgba(0,0,0,0.5);
+  flex-wrap: wrap;
+  gap: 6px;
+  z-index: 100;
+}
+
+#controls-left {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#controls-right {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 11px;
+}
+
+#controls-right label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+
+#fps-slider {
+  width: 80px;
+  accent-color: var(--fg);
+  cursor: pointer;
+}
+
+#fps-display, #frame-counter {
+  font-size: 11px;
+  letter-spacing: 1px;
+  opacity: 0.85;
+}
+
+/* ==========================================
+   TOOLBAR
+   ========================================== */
+#toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  background: rgba(0,0,0,0.6);
+  flex-wrap: wrap;
+  z-index: 100;
+}
+
+/* ==========================================
+   GIF PROGRESS
+   ========================================== */
+#gif-progress {
+  padding: 4px 14px 6px;
+  flex-shrink: 0;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+#gif-progress-bar-wrap {
+  width: 100%;
+  height: 4px;
+  background: rgba(0,255,65,0.15);
+  margin-top: 4px;
+  border: 1px solid var(--border);
+}
+
+#gif-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--fg);
+  transition: width 0.1s linear;
+}
+
+/* ==========================================
+   BUTTONS
+   ========================================== */
+button {
+  background: transparent;
+  border: 1px solid currentColor;
+  color: inherit;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s, text-shadow 0.15s;
+  outline: none;
+  white-space: nowrap;
+}
+
+button:hover {
+  background: rgba(0, 255, 65, 0.1);
+  box-shadow: 0 0 8px var(--glow);
+  text-shadow: 0 0 6px var(--fg);
+}
+
+button:active {
+  background: rgba(0, 255, 65, 0.22);
+}
+
+button.toggle-btn.active {
+  background: rgba(0, 255, 65, 0.2);
+  box-shadow: 0 0 10px var(--glow);
+}
+
+button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   CONFIG PANEL
+   ========================================== */
+#config-panel {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  width: 300px;
+  height: 100vh;
+  background: var(--panel-bg);
+  border-left: 1px solid var(--border);
+  transition: right 0.3s ease;
+  z-index: 5000;
+  overflow-y: auto;
+  padding: 0 0 20px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+#config-panel.open {
+  right: 0;
+}
+
+#config-header {
+  font-size: 13px;
+  letter-spacing: 3px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  text-shadow: 0 0 6px var(--fg);
+  background: rgba(0,255,65,0.04);
+}
+
+.config-section {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0,255,65,0.15);
+}
+
+.config-section-title {
+  font-size: 10px;
+  letter-spacing: 2px;
+  opacity: 0.6;
+  margin-bottom: 8px;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.radio-group input[type="radio"] {
+  accent-color: var(--fg);
+  cursor: pointer;
+}
+
+#custom-charset-input {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--fg);
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  padding: 4px 8px;
+  margin-top: 8px;
+  outline: none;
+  letter-spacing: 2px;
+}
+
+#custom-charset-input:focus {
+  box-shadow: 0 0 6px var(--glow);
+}
+
+#config-panel label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+#font-size-slider {
+  accent-color: var(--fg);
+  cursor: pointer;
+  width: 120px;
+}
+
+#font-size-display {
+  font-size: 11px;
+  opacity: 0.75;
+  margin-left: 4px;
+}
+
+#config-close-btn {
+  width: 100%;
+  margin-top: 4px;
+}
+
+/* ==========================================
+   AMBER THEME
+   ========================================== */
+body.theme-amber {
+  --fg: #ffb000;
+  --border: #ffb000;
+  --glow: rgba(255, 176, 0, 0.18);
+}
+
+body.theme-white {
+  --fg: #ffffff;
+  --border: #aaaaaa;
+  --glow: rgba(255,255,255,0.12);
+}
+
+body.theme-color {
+  --fg: #00ff41;
+  --border: #00ff41;
+  --glow: rgba(0,255,65,0.18);
+}
+
+/* ==========================================
+   NOISE BACKGROUND
+   ========================================== */
+body.bg-noise #terminal {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+/* ==========================================
+   HIDDEN UTILITY
+   ========================================== */
+.hidden {
+  display: none !important;
+}
+
+/* ==========================================
+   MOBILE RESPONSIVE
+   ========================================== */
+@media (max-width: 600px) {
+  #topbar {
+    padding: 4px 8px;
+  }
+  #title-text {
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+  #config-panel {
+    width: 100vw;
+    right: -100vw;
+  }
+  #toolbar {
+    gap: 4px;
+  }
+  button {
+    font-size: 10px;
+    padding: 3px 7px;
+  }
+  #drop-label {
+    font-size: 12px;
+  }
+  #ascii-output {
+    touch-action: pinch-zoom pan-x pan-y;
+  }
+}
