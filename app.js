@@ -185,7 +185,8 @@ async function handleFiles(fileList) {
 
   const elapsed = Math.round(performance.now() - t0);
   const f = frames[0];
-  log(`> FILE LOADED: ${fileList[0].name} (${f.width}x${f.height}) — ${frames.length} frame(s) in ${elapsed}ms`);
+  const fileName = fileList[0]?.name || 'Unknown File';
+  log(`> FILE LOADED: ${fileName} (${f.width}x${f.height}) — ${frames.length} frame(s) in ${elapsed}ms`);
 
   showOutput();
   renderCurrentFrame(true);
