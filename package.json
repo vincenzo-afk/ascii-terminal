@@ -1,0 +1,23 @@
+{
+  "name": "ascii-terminal",
+  "version": "1.0.0",
+  "description": "> **Turn any image, GIF, or video into animated ASCII art — rendered live in a retro CRT terminal, then copy-pasted, shared, or exported anywhere.**",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vincenzo-afk/ascii-terminal.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vincenzo-afk/ascii-terminal/issues"
+  },
+  "homepage": "https://github.com/vincenzo-afk/ascii-terminal#readme",
+  "dependencies": {
+    "jsdom": "^29.1.1"
+  }
+}
