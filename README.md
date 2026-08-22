@@ -1,127 +1,92 @@
-# ASCII CINEMA
+# ASCII Cinema
+
+[![version](https://img.shields.io/badge/version-2.0-green)](https://github.com/vincenzo-afk/ascii-terminal/releases)
+[![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/vincenzo-afk/ascii-terminal)](https://github.com/vincenzo-afk/ascii-terminal/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/vincenzo-afk/ascii-terminal)](https://github.com/vincenzo-afk/ascii-terminal/issues)
 
 > **Turn any image, GIF, or video into animated ASCII art — rendered live in a retro CRT terminal, then copy-pasted, shared, or exported anywhere.**
 
-![version](https://img.shields.io/badge/version-2.0-green)
-![license](https://img.shields.io/badge/license-MIT-blue)
-![size](https://img.shields.io/badge/size-~30%20KB-lightgrey)
-![works](https://img.shields.io/badge/works-offline%20|%20no%20backend-orange)
+ASCII Cinema is a high-performance, zero-dependency, single-page web application that converts visual media into live ASCII art. Designed with a focus on **portability** and **retro aesthetics**, it simulates a classic green-phosphor CRT terminal while providing modern export capabilities that ensure your art looks perfect in any monospaced environment.
 
 ---
 
-## Description
+## 🚀 Key Features
 
-**ASCII CINEMA** is a zero-dependency, single-page web app that converts images, animated GIFs, and videos into live ASCII art displayed inside a CRT-styled terminal. Every frame is sampled into a character grid, brightness-mapped to a configurable charset, and rendered as colored `<span>` elements — exactly like the green-phosphor terminals of the '80s.
-
-What makes it different is **portability**. The plain-text output is a fixed-width character grid with a consistent column count, so when you copy it and paste it into any other terminal, editor, or monospaced environment of the same column size, it aligns perfectly — no broken wrapping, no collapsed spaces, no scrambled rows. Exports (PNG, HTML, TXT, GIF, shareable link) all derive from the same in-memory grid, so the copied output is byte-for-byte identical to what you see on screen.
-
----
-
-## Topics
-
-`ascii-art` `terminal` `crt` `retro` `image-to-ascii` `video-to-ascii` `gif-generator` `animation` `javascript` `html5-canvas` `no-backend`
-
----
-
-## Features
-
-| Feature | What it does |
-|---|---|
-| Image → ASCII | Drop any image (PNG, JPG, WebP, etc.) and watch it render live |
-| GIF → animated ASCII | Decodes every frame of an animated GIF |
-| Video → animated ASCII | Samples up to 60 frames from any video file |
-| Live webcam mode | Real-time ASCII rendering of your camera feed |
-| Color modes | Green, Amber, White, Full Color, and Inverted terminal themes |
-| Charsets | Classic, Dense (shading blocks), Braille, or fully custom |
-| Resolution control | 40 / 80 / 120 / 160 columns — paste into a matching terminal |
-| Playback controls | Play, pause, prev/next frame, loop toggle, FPS slider |
-| Copy & paste | One click copies the exact grid you see on screen |
-| Export HTML | Self-contained HTML with embedded font metrics so the art keeps its exact size in any browser or terminal |
-| Export TXT / PNG / GIF | Download the art as plain text, an image, or an animated GIF |
-| Share link | Compresses the ASCII art into a URL you can send to anyone |
-| CRT effects | Scanlines, vignette, phosphor glow, static-noise background |
-| Easter eggs | Konami code triggers Matrix rain; typing `badapple` plays an ASCII circle animation; right-click the art to Deep Fry it |
+| Feature | Description |
+| :--- | :--- |
+| **Multi-Format Support** | Convert PNG, JPG, WebP, animated GIFs, and MP4 videos live. |
+| **Live Webcam Mode** | Real-time ASCII rendering of your camera feed with low latency. |
+| **Portability Engine** | Guaranteed fixed-width output (40-160 cols) for perfect copy-pasting. |
+| **Retro CRT Effects** | Customizable scanlines, vignette, phosphor glow, and static noise. |
+| **Native GIF Encoder** | Built-in LZW + median-cut quantization encoder for high-quality GIF exports. |
+| **Easter Eggs** | Konami code for Matrix rain, `badapple` animation, and "Deep Fry" mode. |
 
 ---
 
-## How to use
+## 🛠 How to Use
 
-1. **Open `index.html`** in any modern browser — no server, no install, no build step. You can also just double-click the file.
-2. **Drop an image or video** onto the terminal, or click **OPEN FILE** to browse, or **LIVE CAM** to stream your webcam.
-3. **Adjust the look** with the ⚙ CONFIG panel (top-right): charset, color mode, font size, background, and column resolution.
-4. **Play the animation** with the playback bar at the bottom; tune the FPS with the slider.
-5. **Copy & paste anywhere**: hit **COPY TEXT** and paste into any terminal of the same column count — the art stays aligned.
-6. **Export** as PNG, HTML, TXT, or GIF, or generate a **share link**.
-
----
-
-## Copy-paste portability
-
-The core design goal: **what you copy is what you get, in any terminal of the same size.**
-
-- The rendered grid always has exactly `columns` characters per row (40–160, your choice).
-- Trailing spaces are preserved — they are real spaces, not collapsed whitespace.
-- All exports (copy, TXT, share link, HTML) read from the same in-memory character grid, never from the DOM, so spacing can never drift.
-- The exported HTML embeds the exact `font-size`, `line-height`, and `letter-spacing` used on screen, so opening it anywhere reproduces the same visual proportions.
-
-> **Tip:** if your target terminal is 80 columns wide, select **80** in the RESOLUTION setting before copying. The pasted art will then wrap-correctly at column boundaries.
+1.  **Launch**: Open `index.html` in any modern web browser. No installation or server required.
+2.  **Import**: Drag and drop a file onto the terminal, or use the **OPEN FILE** / **LIVE CAM** buttons.
+3.  **Configure**: Use the ⚙ **CONFIG** panel to adjust charset, color themes (Green, Amber, White, Full Color), and resolution.
+4.  **Export**: 
+    *   **COPY TEXT**: One-click copy of the exact grid.
+    *   **HTML**: Self-contained file with embedded font metrics.
+    *   **GIF/PNG/TXT**: Downloadable formats for sharing.
+    *   **SHARE LINK**: A compressed URL containing your art.
 
 ---
 
-## How it works
+## 📐 Portability Contract
 
-1. The source media is drawn onto an off-screen `<canvas>` and read back as raw pixel data.
-2. Each pixel block (cell) is averaged for RGB brightness using the luminance formula `0.299R + 0.587G + 0.114B`.
-3. Brightness is mapped to a character from the chosen charset — darkest cells get dense characters (`@`, `#`), brightest get light ones (` `. , `:`).
-4. A vertical **aspect correction factor (0.45)** compensates for the fact that monospace characters are roughly twice as tall as wide, keeping the art from looking stretched.
-5. Characters are written into a `<pre>` as individually colored `<span>` elements, producing the glowing terminal look.
-6. GIF export uses a **native LZW + median-cut quantization encoder** built into `app.js` — no external worker scripts required.
+The core design goal of ASCII Cinema is: **What you see is what you get.**
+
+Unlike other converters that suffer from collapsed whitespace or variable wrapping, ASCII Cinema uses an in-memory character grid. Every export format (Copy, TXT, HTML) derives from this same grid, ensuring that:
+*   Trailing spaces are preserved as real characters.
+*   Line lengths are strictly enforced to the selected resolution.
+*   HTML exports embed `line-height` and `letter-spacing` to maintain visual proportions.
 
 ---
 
-## Project structure
+## 🏗 Technical Architecture
 
-```
+1.  **Sampling**: Media is drawn to an off-screen `<canvas>` and read as raw RGBA data.
+2.  **Mapping**: Luminance is calculated via `0.299R + 0.587G + 0.114B` and mapped to a 10-step or custom charset.
+3.  **Correction**: A **0.45 aspect correction factor** compensates for monospace character height-to-width ratios.
+4.  **Rendering**: The grid is rendered as colored `<span>` elements inside a `<pre>` tag for maximum performance.
+
+---
+
+## 📦 Project Structure
+
+```text
 ascii-terminal/
-├── index.html     # Single-page app markup + CDN libraries (lz-string, html2canvas, omggif)
-├── style.css      # CRT styling, themes (green/amber/white/color), config panel, responsive layout
-├── app.js         # All logic: pixel engine, renderer, playback, webcam, exports, GIF encoder, easter eggs
-├── LICENSE        # MIT
-└── README.md      # You are here
+├── index.html     # SPA Markup + CDN dependencies (lz-string, html2canvas, omggif)
+├── style.css      # CRT styling, phosphor themes, and config UI
+├── app.js         # Core engine: pixel mapping, GIF encoder, and playback logic
+├── scripts/       # Unit and functional test suites
+├── LICENSE        # MIT License
+└── README.md      # Documentation
 ```
 
 ---
 
-## Browser support
+## 🧪 Development & Testing
 
-Works in all modern browsers (Chrome, Firefox, Safari, Edge). The webcam feature requires a camera and an HTTPS or `localhost` context. Everything else works fully offline once the page is loaded.
+ASCII Cinema includes a comprehensive test suite to ensure engine stability.
 
----
+```bash
+# Install dependencies (for testing only)
+npm install
 
-## Changelog (v2.0)
-
-**Bug fixes**
-
-- GIF export is now fully functional — v1.0 shipped with a broken writer (`new GIF()` from `gif.js` never existed on `window` and threw on click). Replaced with a native LZW + median-cut encoder built into the app.
-- Removed duplicate `id="matrix-canvas"` attribute that appeared twice on the same element.
-- Fixed webcam capture loop so it reliably stops when **STOP CAM** is pressed (previously the animation frame could leak).
-- Fixed duplicate stop-cam button appearing after restarting the camera.
-- GIF encoding progress bar now reports accurate 0–100%.
-- Copy/TXT/share exports now derive from the in-memory character grid instead of `innerText`, guaranteeing spacing is preserved across all browsers.
-- Inverted color mode now routes through the same style switch as the other modes (single source of truth).
-- Removed stray orphaned line left over from v1.0 source.
-- Transparent pixels in images now render as empty space instead of dark characters.
-
-**Improvements**
-
-- Exported HTML now embeds the exact font size, line height, and letter spacing, so the art keeps its size in any terminal or browser.
-- Cleaner code organization with documented sections and a changelog-style bug-fix list at the top of `app.js`.
-- Better README: description, topics, feature table, usage guide, and architecture notes.
+# Run all tests
+npm test
+```
 
 ---
 
-## License
+## 📜 License
 
-MIT License — see [LICENSE](LICENSE) for details.
+Distributed under the MIT License. See `LICENSE` for more information.
 
-Copyright (c) 2026 BHARANI KUMAR S
+Copyright (c) 2026 **BHARANI KUMAR S** (vincenzo-afk)
