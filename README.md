@@ -29,6 +29,7 @@ ASCII Cinema is a high-performance, zero-dependency, single-page web application
 1.  **Launch**: Open `index.html` in any modern web browser. No installation or server required.
 2.  **Import**: Drag and drop a file onto the terminal, or use the **OPEN FILE** / **LIVE CAM** buttons.
 3.  **Configure**: Use the ⚙ **CONFIG** panel to adjust charset, color themes (Green, Amber, White, Full Color), and resolution.
+    *   **DEEP FRY**: Right-click the rendered ASCII art and choose **DEEP FRY** for a high-contrast glitch effect.
 4.  **Export**: 
     *   **COPY TEXT**: One-click copy of the exact grid.
     *   **HTML**: Self-contained file with embedded font metrics.
